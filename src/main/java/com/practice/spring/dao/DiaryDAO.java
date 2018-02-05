@@ -1,11 +1,11 @@
-package com.practice.spring.dto;
+package com.practice.spring.dao;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class Diary {
+public class DiaryDAO {
 
     String userId;
     Date date;

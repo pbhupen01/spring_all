@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController(SpringAllUtils.USERS)
+@RestController
 public class UserController {
 
     UserService userService;
@@ -25,13 +25,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/{emailId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public User getUser(@PathVariable String emailId) throws UserNotFoundException
+    @GetMapping(SpringAllUtils.USERS + "/{userId}")
+    public User getUser(@PathVariable String userId) throws UserNotFoundException
     {
-        return userService.searchUserByEmailId(emailId);
+        return userService.searchUserByUserId(userId);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(SpringAllUtils.USERS)
     public Object getUsers()
     {
         User a = new User();

@@ -11,8 +11,9 @@ import javax.persistence.Table;
 @Table(name = "users")
 public class UserDAO {
 
+    @Id
+    String userId;
     String displayName;
     String password;
-    @Id
     String emailId;
 }

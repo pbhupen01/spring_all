@@ -5,7 +5,9 @@ import com.practice.spring.dto.User;
 import com.practice.spring.exception.UserNotFoundException;
 import com.practice.spring.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
@@ -17,8 +19,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User searchUserByEmailId(String emailId) throws UserNotFoundException {
-        UserDAO userDAO = userRepository.findOne(emailId);
+    public User searchUserByUserId(String userId) throws UserNotFoundException {
+        UserDAO userDAO = userRepository.findOne(userId);
         if(userDAO == null)
         {
             throw new UserNotFoundException(String.format("User %s not found"));
