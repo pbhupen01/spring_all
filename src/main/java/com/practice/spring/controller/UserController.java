@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = SpringAllUtils.USERS)
 public class UserController {
 
     UserService userService;
@@ -25,13 +26,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(SpringAllUtils.USERS + "/{userId}")
+    @GetMapping( value = "/{userId}")
     public User getUser(@PathVariable String userId) throws UserNotFoundException
     {
         return userService.searchUserByUserId(userId);
     }
 
-    @GetMapping(SpringAllUtils.USERS)
+    @GetMapping
     public Object getUsers()
     {
         User a = new User();
