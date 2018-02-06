@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
         UserDAO userDAO = userRepository.findOne(userId);
         if(userDAO == null)
         {
-            throw new UserNotFoundException(String.format("User %s not found"));
+            throw new UserNotFoundException(String.format("User '%s' not found", userId));
         }
         return convertUserDAOToUser(userDAO);
     }
