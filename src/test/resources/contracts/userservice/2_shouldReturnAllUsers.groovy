@@ -2,7 +2,7 @@ package contracts.userservice
 
 org.springframework.cloud.contract.spec.Contract.make {
     request {
-        method 'POST'
+        method 'GET'
         url '/users'
         headers {
             contentType('application/json')
@@ -10,19 +10,19 @@ org.springframework.cloud.contract.spec.Contract.make {
     }
     response {
         status 200
-        body([
+        body(
                 value(
                 "totalElements": 1,
                 "totalPages": 1,
                 "content": [
                         value(
                                 "userId": "test-user",
-                                "name":"Test User",
-                                "emailId":"testUser@test.com"
+                                "name": "Test User",
+                                "emailId": "testUser@test.com"
                         )
                 ]
                 )
-        ])
+        )
         headers {
             contentType('application/json')
         }

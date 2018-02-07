@@ -10,13 +10,13 @@ org.springframework.cloud.contract.spec.Contract.make {
     }
     response {
         status 200
-        body([
+        body(
                 value(
                         "userId": "test-user",
-                        "name":"Test User",
-                        "emailId":"testUser@test.com"
+                        "name": "Test User",
+                        "emailId": "testUser@test.com"
                 )
-        ])
+        )
         headers {
             contentType('application/json')
         }
