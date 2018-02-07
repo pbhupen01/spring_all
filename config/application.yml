@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev #enabling dev profile
   sleuth:
     sampler:
       percentage: 1.0
@@ -23,3 +25,19 @@ logging:
   pattern:
     file: "%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n"
     console: "%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger.%M - %msg%n"
+
+---
+# Defining dev profile
+spring:
+    profiles: dev
+server:
+    port: 8080
+security:
+  ignored: /**
+
+---
+# Defining production profile
+spring:
+    profiles: prod
+server:
+    port: 8181
