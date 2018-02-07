@@ -15,4 +15,10 @@ public class UserRequest {
     String password;
     @NotNull
     String emailId;
+
+    public String toString()
+    {
+        return String.format("UserId: %s, Name: %s, EmailId: %s", userId, name, emailId);
+    }
+
 }

@@ -16,4 +16,9 @@ public class UserDAO {
     String displayName;
     String password;
     String emailId;
+
+    public String toString()
+    {
+        return String.format("UserId: %s, Name: %s, EmailId: %s", userId, displayName, emailId);
+    }
 }

@@ -1,10 +1,22 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
   datasource:
     driver-class-name: org.postgresql.Driver
     username: "postgres"
     password: "postgres"
     url: jdbc:postgresql://localhost:5432/pusers
+
+logging:
+  level:
+    org.springframework.web: ERROR
+    com.practice.spring: DEBUG
+    org.hibernate.type: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: DEBUG
+  path: "logs"
+  file: "${logging.path}/log.log"
+  pattern:
+    file: "%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n"
+    console: "%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger.%M - %msg%n"

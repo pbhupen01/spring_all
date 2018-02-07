@@ -8,6 +8,7 @@ import com.practice.spring.exception.UserAlreadyExistsException;
 import com.practice.spring.exception.UserNotFoundException;
 import com.practice.spring.service.UserService;
 import com.practice.spring.util.SpringAllUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = SpringAllUtils.USERS)
+@Slf4j
 public class UserController {
 
     UserService userService;
@@ -31,7 +33,9 @@ public class UserController {
     @GetMapping( value = "/{userId}")
     public ResponseEntity<UserResponse> getUser(@PathVariable String userId) throws UserNotFoundException
     {
+        log.debug("Got search request for user : " + userId);
         UserDAO userDAO = userService.searchUserByUserId(userId);
+        log.debug("Returning found user : " + userId);
         UserResponse response = convertUserDAOToUserResponse(userDAO);
         return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
     }
@@ -40,16 +44,20 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) throws UserAlreadyExistsException
     {
+        log.debug("Got create request for user : " + userRequest);
         UserDAO userDAO = convertUserRequestRequestToUserDAO(userRequest);
         UserDAO createdUserDAO = userService.createUser(userDAO);
+        log.info("Created user : " + userRequest);
         UserResponse response = convertUserDAOToUserResponse(createdUserDAO);
         return new ResponseEntity<UserResponse>(response, HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) throws UserNotFoundException {
+        log.debug("Got update request for user : " + userRequest);
         UserDAO userDAO = convertUserRequestRequestToUserDAO(userRequest);
         UserDAO updatedUserDAO = userService.updateUser(userDAO);
+        log.info("Updated user : " + userRequest);
         UserResponse response = convertUserDAOToUserResponse(updatedUserDAO);
         return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
     }
@@ -59,7 +67,9 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable String userId) throws UserNotFoundException
     {
+        log.debug("Got delete request for user : " + userId);
         userService.deleteUserByUserId(userId);
+        log.info("Deleted user : " + userId);
     }
 
     @GetMapping
@@ -67,7 +77,9 @@ public class UserController {
     public ResponseEntity<PageableCollection<UserResponse>> getUsers(@RequestParam(required = false, defaultValue = "0") Integer page,
                                                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize)
     {
+        log.debug(String.format("Got getUsers request. Page %d. Pagesize %d", page, pageSize));
         Page<UserDAO> userDAOs = userService.getAllUsers(page, pageSize);
+        log.debug(String.format("Found users. Total: %d Pages: %d", userDAOs.getTotalElements(), userDAOs.getTotalPages()));
         PageableCollection<UserResponse> response = new PageableCollection(
                 userDAOs.getTotalElements(),
                 userDAOs.getTotalPages(),
@@ -81,6 +93,7 @@ public class UserController {
         UserResponse userResponse = new UserResponse();
         userResponse.setName(userDAO.getDisplayName());
         userResponse.setEmailId(userDAO.getEmailId());
+        userResponse.setUserId(userDAO.getUserId());
         return userResponse;
     }
 

@@ -26,4 +26,9 @@ public class ErrorResponse {
         this(status, message);
         this.debugMessage = ExceptionUtils.getStackTrace(ex);
     }
+
+    public String toString()
+    {
+        return String.format("HttpStatus: %s. Error Message: %s", status.toString(), message);
+    }
 }
