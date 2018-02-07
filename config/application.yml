@@ -1,4 +1,7 @@
 spring:
+  sleuth:
+    sampler:
+      percentage: 1.0
   jpa:
     hibernate:
       ddl-auto: update
