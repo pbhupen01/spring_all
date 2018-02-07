@@ -2,7 +2,7 @@ spring:
   application:
     name: "UserDiary"
   profiles:
-    active: dev #set profile here
+    active: prod #set profile here
   sleuth:
     traceId128: true
     sampler:
@@ -34,6 +34,11 @@ spring:
     username: "postgres"
     password: "postgres"
     url: jdbc:postgresql://localhost:5432/pusers
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: pusers
 server:
   port: 8080
 security:
@@ -47,9 +52,14 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: "postgres"
     password: "postgres"
-    url: jdbc:postgresql://localhost:5432/pusers
+    url: jdbc:postgresql://kubeslave2.test.com:5432/pusers
+  data:
+    mongodb:
+      host: kubeslave2.test.com
+      port: 27017
+      database: pusers
 server:
-  port: 8181
+  port: 8080
 
 ---
 # Defining test profile
