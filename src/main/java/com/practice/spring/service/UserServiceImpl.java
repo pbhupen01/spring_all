@@ -1,11 +1,15 @@
 package com.practice.spring.service;
 
 import com.practice.spring.dao.UserDAO;
-import com.practice.spring.dto.User;
+import com.practice.spring.exception.UserAlreadyExistsException;
 import com.practice.spring.exception.UserNotFoundException;
 import com.practice.spring.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,26 +23,52 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User searchUserByUserId(String userId) throws UserNotFoundException {
+    public UserDAO searchUserByUserId(String userId) throws UserNotFoundException {
         UserDAO userDAO = userRepository.findOne(userId);
         if(userDAO == null)
         {
-            throw new UserNotFoundException(String.format("User '%s' not found", userId));
+            throw new UserNotFoundException(userId);
         }
-        return convertUserDAOToUser(userDAO);
+        return userDAO;
     }
 
     @Override
-    public void getAllUsers() {
-        userRepository.findAll();
+    public UserDAO createUser(@Valid UserDAO userDAO) throws UserAlreadyExistsException{
+        String userId = userDAO.getUserId();
+        UserDAO searchedUserDAO = userRepository.findOne(userId);
+        if(searchedUserDAO != null)
+        {
+            throw new UserAlreadyExistsException(userId);
+        }
+        UserDAO returnedUserDAO = userRepository.save(userDAO);
+        return returnedUserDAO;
     }
 
-    private User convertUserDAOToUser(UserDAO userDAO)
-    {
-        User user = new User();
-        user.setName(userDAO.getDisplayName());
-        user.setEmailId(userDAO.getEmailId());
-        user.setPassword(userDAO.getPassword());
-        return user;
+    @Override
+    public UserDAO updateUser(UserDAO userDAO) throws UserNotFoundException {
+        String userId = userDAO.getUserId();
+        UserDAO searchedUserDAO = userRepository.findOne(userId);
+        if(searchedUserDAO == null)
+        {
+            throw new UserNotFoundException(userId);
+        }
+        UserDAO returnedUserDAO = userRepository.save(userDAO);
+        return returnedUserDAO;
+    }
+
+    @Override
+    public void deleteUserByUserId(String userId) throws UserNotFoundException {
+        UserDAO searchedUserDAO = userRepository.findOne(userId);
+        if(searchedUserDAO == null)
+        {
+            throw new UserNotFoundException(userId);
+        }
+        userRepository.delete(userId);
+    }
+
+    @Override
+    public Page<UserDAO> getAllUsers(Integer page, Integer pageSize) {
+        Page<UserDAO> users = userRepository.findAll( new PageRequest(page, pageSize));
+        return users;
     }
 }

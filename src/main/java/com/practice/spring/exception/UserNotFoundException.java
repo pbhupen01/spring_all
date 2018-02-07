@@ -2,8 +2,8 @@ package com.practice.spring.exception;
 
 public class UserNotFoundException extends Exception {
 
-    public UserNotFoundException(String message)
+    public UserNotFoundException(String userId)
     {
-        super(message);
+        super(String.format("User with ID '%s' not found", userId));
     }
 }

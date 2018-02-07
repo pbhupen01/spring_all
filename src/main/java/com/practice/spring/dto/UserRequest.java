@@ -2,11 +2,17 @@ package com.practice.spring.dto;
 
 import lombok.Data;
 
-@Data
-public class User {
+import javax.validation.constraints.NotNull;
 
+@Data
+public class UserRequest {
+
+    @NotNull
     String userId;
+    @NotNull
     String name;
+    @NotNull
     String password;
+    @NotNull
     String emailId;
 }

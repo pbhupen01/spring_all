@@ -1,6 +1,7 @@
 package com.practice.spring.handler;
 
 import com.practice.spring.dto.ErrorResponse;
+import com.practice.spring.exception.UserAlreadyExistsException;
 import com.practice.spring.exception.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,13 +53,19 @@ public class RestErrorHandlerController extends ResponseEntityExceptionHandler {
                 new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<Object> handleException(UserAlreadyExistsException ex) {
+        return buildResponseEntity(
+                new ErrorResponse(HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception ex) {
         return buildResponseEntity(
                 new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex));
     }
 
-    private ResponseEntity<Object> buildResponseEntity(ErrorResponse baseErrorDTO) {
-        return new ResponseEntity(baseErrorDTO, baseErrorDTO.getStatus());
+    private ResponseEntity<Object> buildResponseEntity(ErrorResponse errorResponse) {
+        return new ResponseEntity(errorResponse, errorResponse.getStatus());
     }
 }
