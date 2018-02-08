@@ -14,6 +14,8 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
   resources:
+    # If this is set to false then swagger doesn't work. Unless swagger resources are added (through AppConfig)
+    # But it is required to be set to false to enable NoHandlerFoundException
     add-mappings: false
 
 logging:

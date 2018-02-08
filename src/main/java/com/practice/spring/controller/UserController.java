@@ -8,6 +8,7 @@ import com.practice.spring.exception.UserAlreadyExistsException;
 import com.practice.spring.exception.UserNotFoundException;
 import com.practice.spring.service.UserService;
 import com.practice.spring.util.SpringAllUtils;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = SpringAllUtils.USERS)
+//@Transactional(rollbackFor = Exception.class)
 @Slf4j
 public class UserController {
 
@@ -30,6 +32,10 @@ public class UserController {
         this.userService = userService;
     }
 
+    @ApiOperation(
+            value = "Get user",
+            notes = "Returns Json Data with the User details"
+    )
     @GetMapping( value = "/{userId}")
     public ResponseEntity<UserResponse> getUser(@PathVariable String userId) throws UserNotFoundException
     {
@@ -41,6 +47,10 @@ public class UserController {
     }
 
 
+    @ApiOperation(
+            value = "Create user",
+            notes = "Returns Json Data with the created User details"
+    )
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) throws UserAlreadyExistsException
     {
@@ -52,6 +62,10 @@ public class UserController {
         return new ResponseEntity<UserResponse>(response, HttpStatus.CREATED);
     }
 
+    @ApiOperation(
+            value = "Update user",
+            notes = "Returns Json Data with the updated User details"
+    )
     @PutMapping
     public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) throws UserNotFoundException {
         log.debug("Got update request for user : " + userRequest);
@@ -63,6 +77,10 @@ public class UserController {
     }
 
 
+    @ApiOperation(
+            value = "Delete user",
+            notes = "Deletes user by userId"
+    )
     @DeleteMapping( value = "/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable String userId) throws UserNotFoundException
@@ -72,6 +90,10 @@ public class UserController {
         log.info("Deleted user : " + userId);
     }
 
+    @ApiOperation(
+            value = "Get all users",
+            notes = "Returns Json Data with all the Users details"
+    )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<PageableCollection<UserResponse>> getUsers(@RequestParam(required = false, defaultValue = "0") Integer page,
@@ -87,6 +109,14 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    /*@GetMapping(value = "/{userId}" + SpringAllUtils.DIARIES)
+    public ResponseEntity<Diary> getDiaryForUserForDate(@PathVariable String userId,
+                                                        @RequestParam(value="date", required = true) @DateTimeFormat(pattern="dd-MM-yyyy") Date date)
+    {
+        log.debug(String.format("Got getDiaryForUserForDate request. UserId %s. Date %s", userId, date));
+        Diary response = new Diary();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }*/
 
     private UserResponse convertUserDAOToUserResponse(UserDAO userDAO)
     {
