@@ -2,7 +2,7 @@ spring:
   application:
     name: "UserDiary"
   profiles:
-    active: prod #set profile here
+    active: dev #set profile here
   sleuth:
     traceId128: true
     sampler:
@@ -21,9 +21,9 @@ logging:
   path: "logs"
   file: "${logging.path}/log.log"
   pattern:
-    level: "%d{ABSOLUTE} [%X{X-B3-TraceId}/%X{X-B3-SpanId}] %-5p [%t] %C{2} - %m%n"
+    #level: "%d{ABSOLUTE} [%X{X-B3-TraceId}/%X{X-B3-SpanId}] %-5p [%t] %C{2} - %m%n"
     file: "%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n"
-    console: "%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger.%M - %msg%n"
+    #console: "%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger.%M - %msg%n"
 
 ---
 # Defining dev profile
