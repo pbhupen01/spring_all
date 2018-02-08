@@ -55,7 +55,7 @@ public class UserRepositoryTest {
 
 
     @Test
-    public void whenRequestedCreate_createUser()
+    public void givenNonExistingUser_whenCreateUser_thenCreateUser()
     {
         // given
         UserDAO userDAO = new UserDAO("TestUser2", "Test User2", "TestUser2", "test2@test.com");
@@ -68,7 +68,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void whenFindByEmailId_returnUser()
+    public void givenExistingUserId_whenGetUser_thenReturnUser()
     {
         // given
         UserDAO userDAO = null;
@@ -82,7 +82,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void whenFindAll_returnAllUsers()
+    public void givenNoFilter_whenFindAllUsers_thenReturnAllUsers()
     {
         // given
         List<UserDAO> listUserDAO = null;
@@ -96,7 +96,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void whenRequestedUpdate_updateUser()
+    public void givenExistingUser_whenUpdateUser_thenUpdateUser()
     {
         // given
         UserDAO userDAO = new UserDAO("TestUser2", "Updated Test User2", "TestUser2", "test2@test.com");

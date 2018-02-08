@@ -7,7 +7,7 @@ import org.junit.Test;
 public class UserDAOTest {
 
     @Test
-    public void whenGivenObjectWithSamefields_returnTrue()
+    public void givenObjectsWithSameFields_whenTestedEquals_thenAssertEquals()
     {
         // given
         UserDAO first = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
@@ -20,7 +20,7 @@ public class UserDAOTest {
     }
 
     @Test
-    public void whenGivenObjectWithDifferentUserId_returnTrue()
+    public void givenObjectsWithDiffFields_whenTestedEquals_thenAssertNotEquals()
     {
         // given
         UserDAO first = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");

@@ -1,122 +1,85 @@
 package com.practice.spring.controller;
 
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.practice.spring.contracts.UserserviceBase;
-import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
-import io.restassured.response.ResponseOptions;
-import lombok.extern.slf4j.Slf4j;
+import com.practice.spring.dao.UserDAO;
+import com.practice.spring.exception.UserNotFoundException;
+import com.practice.spring.service.UserService;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.toomuchcoding.jsonassert.JsonAssertion.assertThatJson;
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-import static org.springframework.cloud.contract.verifier.assertion.SpringCloudContractAssertions.assertThat;
+/**
+ * Focused on UserController Code only
+ * So Mocking UserService
+ *
+ * https://memorynotfound.com/unit-test-spring-mvc-rest-service-junit-mockito/
+ *
+ */
 
-@Slf4j
-@Ignore
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UsersControllerTest extends UserserviceBase {
+@RunWith(SpringRunner.class)
+@WebMvcTest(UserController.class)
+public class UsersControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private UserService userService;
 
     @Test
-    public void validate_1_shouldCreateUser() throws Exception {
-        // given:
-        MockMvcRequestSpecification request = given()
-                .header("Content-Type", "application/json")
-                .body("{\"userId\":\"test-user\",\"name\":\"Test User\",\"password\":\"test-user\",\"emailId\":\"testUser@test.com\"}");
+    public void givenExistingUserId_whenGetUser_thenReturnUser() throws Exception
+    {
+        UserDAO userDAO1 = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
 
-        // when:
-        ResponseOptions response = given().spec(request)
-                .post("/users");
+        // given
+        Mockito.when(userService.searchUserByUserId(userDAO1.getUserId())).thenReturn(userDAO1);
 
-        // then:
-        assertThat(response.statusCode()).isEqualTo(201);
-        assertThat(response.header("Content-Type")).matches("application/json.*");
-        // and:
-        DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-        assertThatJson(parsedJson).field("['name']").isEqualTo("Test User");
-        assertThatJson(parsedJson).field("['emailId']").isEqualTo("testUser@test.com");
-        assertThatJson(parsedJson).field("['userId']").isEqualTo("test-user");
+        // when then
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/" + userDAO1.getUserId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
+                .andDo(MockMvcResultHandlers.print());
+                //.andExpect(MockMvcResultMatchers.content().json());
     }
 
     @Test
-    public void validate_2_shouldReturnAllUsers() throws Exception {
-        // given:
-        MockMvcRequestSpecification request = given()
-                .header("Content-Type", "application/json");
+    public void givenNonExistingUserId_whenGetUser_thenReturnNotFound() throws Exception
+    {
+        String userId = "test";
 
-        // when:
-        ResponseOptions response = given().spec(request)
-                .get("/users");
+        // given
+        Mockito.when(userService.searchUserByUserId(userId)).thenThrow(new UserNotFoundException(userId));
 
-        // then:
-        assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.header("Content-Type")).matches("application/json.*");
-        // and:
-        DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-        assertThatJson(parsedJson).array("['content']").contains("['name']").isEqualTo("Test User");
-        assertThatJson(parsedJson).field("['totalPages']").isEqualTo(1);
-        assertThatJson(parsedJson).array("['content']").contains("['emailId']").isEqualTo("testUser@test.com");
-        assertThatJson(parsedJson).field("['totalElements']").isEqualTo(1);
-        assertThatJson(parsedJson).array("['content']").contains("['userId']").isEqualTo("test-user");
+        // when then
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/" + userId))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void validate_3_shouldReturnUser() throws Exception {
-        // given:
-        MockMvcRequestSpecification request = given()
-                .header("Content-Type", "application/json");
+    public void givenNonExistingUser_whenCreateUser_thenCreateUser() throws Exception
+    {
+        UserDAO userDAO1 = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
 
-        // when:
-        ResponseOptions response = given().spec(request)
-                .get("/users/test-user");
+        // given
+        Mockito.when(userService.createUser(userDAO1)).thenReturn(userDAO1);
 
-        // then:
-        assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.header("Content-Type")).matches("application/json.*");
-        // and:
-        DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-        assertThatJson(parsedJson).field("['name']").isEqualTo("Test User");
-        assertThatJson(parsedJson).field("['emailId']").isEqualTo("testUser@test.com");
-        assertThatJson(parsedJson).field("['userId']").isEqualTo("test-user");
-    }
-
-    @Test
-    public void validate_4_shouldUpdateUser() throws Exception {
-        // given:
-        MockMvcRequestSpecification request = given()
-                .header("Content-Type", "application/json")
-                .body("{\"userId\":\"test-user\",\"name\":\"Utest User\",\"password\":\"test-user\",\"emailId\":\"utest@test.com\"}");
-
-        // when:
-        ResponseOptions response = given().spec(request)
-                .put("/users");
-
-        // then:
-        assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.header("Content-Type")).matches("application/json.*");
-        // and:
-        DocumentContext parsedJson = JsonPath.parse(response.getBody().asString());
-        assertThatJson(parsedJson).field("['emailId']").isEqualTo("utest@test.com");
-        assertThatJson(parsedJson).field("['name']").isEqualTo("Utest User");
-        assertThatJson(parsedJson).field("['userId']").isEqualTo("test-user");
-    }
-
-    @Test
-    public void validate_5_shouldDeleteUser() throws Exception {
-        // given:
-        MockMvcRequestSpecification request = given()
-                .header("Content-Type", "application/json");
-
-        // when:
-        ResponseOptions response = given().spec(request)
-                .delete("/users/test-user");
-
-        // then:
-        assertThat(response.statusCode()).isEqualTo(200);
-        //assertThat(response.header("Content-Type")).matches("application/json.*");
+        // when then
+        /*mockMvc.perform(MockMvcRequestBuilders.post("/users/"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
+                .andDo(MockMvcResultHandlers.print());*/
+        //.andExpect(MockMvcResultMatchers.content().json());
     }
 
 }
