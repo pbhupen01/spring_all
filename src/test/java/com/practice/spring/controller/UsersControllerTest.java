@@ -33,6 +33,8 @@ public class UsersControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    //TestRestTemplate restTemplate = new TestRestTemplate();
+
     @MockBean
     private UserService userService;
 
