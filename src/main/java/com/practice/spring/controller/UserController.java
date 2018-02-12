@@ -1,6 +1,10 @@
 package com.practice.spring.controller;
 
 import com.practice.spring.dto.*;
+import com.practice.spring.dto.diary.DiaryRequest;
+import com.practice.spring.dto.diary.DiaryResponse;
+import com.practice.spring.dto.user.UserRequest;
+import com.practice.spring.dto.user.UserResponse;
 import com.practice.spring.exception.DiaryAlreadyExistsException;
 import com.practice.spring.exception.DiaryNotFoundException;
 import com.practice.spring.model.Diary;
@@ -8,6 +12,7 @@ import com.practice.spring.model.DiaryID;
 import com.practice.spring.model.User;
 import com.practice.spring.exception.UserAlreadyExistsException;
 import com.practice.spring.exception.UserNotFoundException;
+import com.practice.spring.service.DiaryService;
 import com.practice.spring.service.UserService;
 import com.practice.spring.util.SpringAllUtils;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -30,11 +36,13 @@ import java.util.stream.Collectors;
 public class UserController {
 
     UserService userService;
+    DiaryService diaryService;
 
     @Autowired
-    public UserController(UserService userService)
+    public UserController(UserService userService, DiaryService diaryService)
     {
         this.userService = userService;
+        this.diaryService = diaryService;
     }
 
     @ApiOperation(
@@ -118,7 +126,7 @@ public class UserController {
     public ResponseEntity<DiaryResponse> getDiaryForUserForDate(@PathVariable String userId,
                                                                 @RequestParam(value="date", required = true) @DateTimeFormat(pattern="dd-MM-yyyy") Date date) throws UserNotFoundException, DiaryNotFoundException {
         log.debug(String.format("Got getDiaryForUserForDate request. UserId %s. Date %s", userId, date));
-        Diary diary = userService.searchDiaryForUser(userId, date);
+        Diary diary = diaryService.searchDiaryForUser(userId, date);
         DiaryResponse response = convertDiaryModelToDiaryResponse(diary);
         log.debug(String.format("Returning Diary for UserId %s. Date %s", userId, date));
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -129,7 +137,7 @@ public class UserController {
                                                             @RequestBody DiaryRequest diaryRequest) throws UserNotFoundException, DiaryAlreadyExistsException {
         log.debug(String.format("Got createDiaryForUser request. UserId %s. Date %s", userId, diaryRequest.getDate()));
         Diary diary = convertDiaryRequestToDiaryModel(diaryRequest, userId);
-        Diary createdDiary = userService.createDiaryForUser(userId, diary);
+        Diary createdDiary = diaryService.createDiaryForUser(userId, diary);
         DiaryResponse response = convertDiaryModelToDiaryResponse(createdDiary);
         log.info(String.format("Created diary for UserId %s. Date %s", userId, response.getDate()));
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -140,7 +148,7 @@ public class UserController {
                                                             @RequestBody DiaryRequest diaryRequest) throws UserNotFoundException, DiaryNotFoundException {
         log.debug(String.format("Got updateDiaryForUser request. UserId %s. Date %s", userId, diaryRequest.getDate()));
         Diary diary = convertDiaryRequestToDiaryModel(diaryRequest, userId);
-        Diary createdDiary = userService.updateDiaryForUser(userId, diary);
+        Diary createdDiary = diaryService.updateDiaryForUser(userId, diary);
         DiaryResponse response = convertDiaryModelToDiaryResponse(createdDiary);
         log.info(String.format("Updated diary for UserId %s. Date %s", userId, response.getDate()));
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -150,8 +158,15 @@ public class UserController {
     public void deleteDiaryForUser(@PathVariable String userId,
                                                         @RequestParam(value="date", required = true) @DateTimeFormat(pattern="dd-MM-yyyy") Date date) throws UserNotFoundException, DiaryNotFoundException {
         log.debug(String.format("Got deleteDiaryForUser request. UserId %s. Date %s", userId, date));
-        userService.deleteDiaryForUser(userId, date);
+        diaryService.deleteDiaryForUser(userId, date);
         log.info(String.format("Deleted Diary for UserId %s. Date %s", userId, date));
+    }
+
+    @DeleteMapping(value = "/{userId}" + SpringAllUtils.DIARIES + SpringAllUtils.UPLOADFILE)
+    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile diaryFile)
+    {
+        String response = "File upload successful";
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     private Diary convertDiaryRequestToDiaryModel(DiaryRequest request, String userId)

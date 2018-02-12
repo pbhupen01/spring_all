@@ -1,4 +1,4 @@
-package com.practice.spring.dto;
+package com.practice.spring.dto.user;
 
 import lombok.Data;
 

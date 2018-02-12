@@ -1,13 +1,12 @@
-package com.practice.spring.dto;
+package com.practice.spring.dto.diary;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class DiaryResponse {
+public class DiaryRequest {
 
-    String userId;
     Date date;
     String message;
 }

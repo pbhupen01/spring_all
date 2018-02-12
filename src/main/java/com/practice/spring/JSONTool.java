@@ -1,7 +1,7 @@
 package com.practice.spring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.spring.dto.UserRequest;
+import com.practice.spring.dto.user.UserRequest;
 
 import java.io.IOException;
 

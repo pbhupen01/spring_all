@@ -17,6 +17,10 @@ spring:
     # If this is set to false then swagger doesn't work. Unless swagger resources are added (through AppConfig)
     # But it is required to be set to false to enable NoHandlerFoundException
     add-mappings: false
+  http:
+    multipart:
+      max-file-size: 128KB
+      max-request-size: 128KB
 
 logging:
   level:
