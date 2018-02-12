@@ -48,6 +48,8 @@ spring:
       host: localhost
       port: 27017
       database: pusers
+      repositories:
+        enabled: true
 server:
   port: 8080
 security:

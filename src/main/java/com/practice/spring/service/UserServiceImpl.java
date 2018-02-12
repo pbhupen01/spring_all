@@ -1,5 +1,8 @@
 package com.practice.spring.service;
 
+import com.practice.spring.exception.DiaryAlreadyExistsException;
+import com.practice.spring.exception.DiaryNotFoundException;
+import com.practice.spring.model.Diary;
 import com.practice.spring.model.User;
 import com.practice.spring.exception.UserAlreadyExistsException;
 import com.practice.spring.exception.UserNotFoundException;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @Service
 @Slf4j
@@ -86,5 +90,55 @@ public class UserServiceImpl implements UserService {
         Page<User> users = userRepository.findAll( new PageRequest(page, pageSize));
         log.debug("Retrieve successful for all users. Page: " + page + ". Pagsize: "+ pageSize);
         return users;
+    }
+
+    @Override
+    public void deleteDiaryForUser(String userId, Date date) throws UserNotFoundException, DiaryNotFoundException {
+        searchUserByUserId(userId);
+        //TODO add code to search diary
+        Diary diary = null;
+        if(diary == null)
+        {
+            throw new DiaryNotFoundException(userId, date);
+        }
+        //TODO add code to delete diary
+    }
+
+    @Override
+    public Diary searchDiaryForUser(String userId, Date date) throws UserNotFoundException, DiaryNotFoundException {
+        searchUserByUserId(userId);
+        // TODO add code to search diary for user
+        Diary diary = null;
+        if(diary == null)
+        {
+            throw new DiaryNotFoundException(userId, date);
+        }
+        return diary;
+    }
+
+    @Override
+    public Diary updateDiaryForUser(String userId, Diary diary) throws UserNotFoundException, DiaryNotFoundException {
+        searchUserByUserId(userId);
+        // TODO add code to search diary for user
+        Diary searchedDiary = null;
+        if(searchedDiary == null)
+        {
+            throw new DiaryNotFoundException(userId, diary.getKey().getDate());
+        }
+        // TODO add code to update diary
+        return null;
+    }
+
+    @Override
+    public Diary createDiaryForUser(String userId, Diary diary) throws UserNotFoundException, DiaryAlreadyExistsException {
+        searchUserByUserId(userId);
+        // TODO add code to search diary for user
+        Diary searchedDiary = null;
+        if(searchedDiary == null)
+        {
+            throw new DiaryAlreadyExistsException(userId, diary.getKey().getDate());
+        }
+        // TODO add code to create diary
+        return null;
     }
 }

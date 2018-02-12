@@ -1,6 +1,8 @@
 package com.practice.spring.handler;
 
 import com.practice.spring.dto.ErrorResponse;
+import com.practice.spring.exception.DiaryAlreadyExistsException;
+import com.practice.spring.exception.DiaryNotFoundException;
 import com.practice.spring.exception.UserAlreadyExistsException;
 import com.practice.spring.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -89,6 +91,20 @@ public class RestErrorHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<Object> handleException(UserAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
+        log.error(ERROR_MESSAGE + errorResponse, ex);
+        return buildResponseEntity(errorResponse);
+    }
+
+    @ExceptionHandler(DiaryNotFoundException.class)
+    public ResponseEntity<Object> handleException(DiaryNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        log.error(ERROR_MESSAGE + errorResponse, ex);
+        return buildResponseEntity(errorResponse);
+    }
+
+    @ExceptionHandler(DiaryAlreadyExistsException.class)
+    public ResponseEntity<Object> handleException(DiaryAlreadyExistsException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
         log.error(ERROR_MESSAGE + errorResponse, ex);
         return buildResponseEntity(errorResponse);
