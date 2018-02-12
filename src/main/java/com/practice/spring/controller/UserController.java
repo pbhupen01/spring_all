@@ -1,6 +1,6 @@
 package com.practice.spring.controller;
 
-import com.practice.spring.dao.UserDAO;
+import com.practice.spring.model.User;
 import com.practice.spring.dto.PageableCollection;
 import com.practice.spring.dto.UserRequest;
 import com.practice.spring.dto.UserResponse;
@@ -41,7 +41,7 @@ public class UserController {
     public ResponseEntity<UserResponse> getUser(@PathVariable String userId) throws UserNotFoundException
     {
         log.debug("Got search request for user : " + userId);
-        UserDAO userDAO = userService.searchUserByUserId(userId);
+        User userDAO = userService.searchUserByUserId(userId);
         log.debug("Returning found user : " + userId);
         UserResponse response = convertUserDAOToUserResponse(userDAO);
         return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
@@ -56,8 +56,8 @@ public class UserController {
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) throws UserAlreadyExistsException
     {
         log.debug("Got create request for user : " + userRequest);
-        UserDAO userDAO = convertUserRequestRequestToUserDAO(userRequest);
-        UserDAO createdUserDAO = userService.createUser(userDAO);
+        User userDAO = convertUserRequestRequestToUserDAO(userRequest);
+        User createdUserDAO = userService.createUser(userDAO);
         log.info("Created user : " + userRequest);
         UserResponse response = convertUserDAOToUserResponse(createdUserDAO);
         return new ResponseEntity<UserResponse>(response, HttpStatus.CREATED);
@@ -70,8 +70,8 @@ public class UserController {
     @PutMapping
     public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) throws UserNotFoundException {
         log.debug("Got update request for user : " + userRequest);
-        UserDAO userDAO = convertUserRequestRequestToUserDAO(userRequest);
-        UserDAO updatedUserDAO = userService.updateUser(userDAO);
+        User userDAO = convertUserRequestRequestToUserDAO(userRequest);
+        User updatedUserDAO = userService.updateUser(userDAO);
         log.info("Updated user : " + userRequest);
         UserResponse response = convertUserDAOToUserResponse(updatedUserDAO);
         return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
@@ -101,7 +101,7 @@ public class UserController {
                                                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize)
     {
         log.debug(String.format("Got getUsers request. Page %d. Pagesize %d", page, pageSize));
-        Page<UserDAO> userDAOs = userService.getAllUsers(page, pageSize);
+        Page<User> userDAOs = userService.getAllUsers(page, pageSize);
         log.debug(String.format("Found users. Total: %d Pages: %d", userDAOs.getTotalElements(), userDAOs.getTotalPages()));
         PageableCollection<UserResponse> response = new PageableCollection(
                 userDAOs.getTotalElements(),
@@ -119,7 +119,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }*/
 
-    private UserResponse convertUserDAOToUserResponse(UserDAO userDAO)
+    private UserResponse convertUserDAOToUserResponse(User userDAO)
     {
         UserResponse userResponse = new UserResponse();
         userResponse.setName(userDAO.getDisplayName());
@@ -128,9 +128,9 @@ public class UserController {
         return userResponse;
     }
 
-    private UserDAO convertUserRequestRequestToUserDAO(UserRequest userRequest)
+    private User convertUserRequestRequestToUserDAO(UserRequest userRequest)
     {
-        UserDAO userDAO = new UserDAO();
+        User userDAO = new User();
         userDAO.setDisplayName(userRequest.getName());
         userDAO.setEmailId(userRequest.getEmailId());
         userDAO.setPassword(userRequest.getPassword());

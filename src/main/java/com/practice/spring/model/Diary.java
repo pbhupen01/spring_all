@@ -1,4 +1,4 @@
-package com.practice.spring.dao;
+package com.practice.spring.model;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 /*@Entity
 @Table(name = "diaries")*/
-public class DiaryDAO {
+public class Diary {
 
     String userId;
     Date date;

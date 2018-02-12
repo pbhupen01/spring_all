@@ -1,6 +1,6 @@
 package com.practice.spring.service;
 
-import com.practice.spring.dao.UserDAO;
+import com.practice.spring.model.User;
 import com.practice.spring.exception.UserAlreadyExistsException;
 import com.practice.spring.exception.UserNotFoundException;
 import com.practice.spring.repository.UserRepository;
@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,9 +34,9 @@ public class UserServiceImplTest {
 
     @Before
     public void setUp() {
-        UserDAO userDAO1 = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
-        UserDAO userDAO2 = new UserDAO("CreateUser", "Create User", "TestUser", "test@test.com");
-        UserDAO userDAO3 = new UserDAO("TestUser", "Update User", "TestUser", "test@test.com");
+        User userDAO1 = new User("TestUser", "Test User", "TestUser", "test@test.com");
+        User userDAO2 = new User("CreateUser", "Create User", "TestUser", "test@test.com");
+        User userDAO3 = new User("TestUser", "Update User", "TestUser", "test@test.com");
 
         Mockito.when(userRepository.findOne(userDAO1.getUserId()))
                 .thenReturn(userDAO1);
@@ -56,10 +55,10 @@ public class UserServiceImplTest {
     public void givenExistingUserId_whenSearchUser_thenReturnUser() throws UserNotFoundException
     {
         //given
-        UserDAO searchUserDAO = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
+        User searchUserDAO = new User("TestUser", "Test User", "TestUser", "test@test.com");
 
         // when
-        UserDAO userDAO = userService.searchUserByUserId(searchUserDAO.getUserId());
+        User userDAO = userService.searchUserByUserId(searchUserDAO.getUserId());
 
         //then
         Assert.assertEquals(userDAO, searchUserDAO);
@@ -70,7 +69,7 @@ public class UserServiceImplTest {
     public void givenNonExistingUserId_whenSearchUser_thenThrowException() throws UserNotFoundException
     {
         //given
-        UserDAO searchUserDAO = new UserDAO("newUser", "Test User", "TestUser", "test@test.com");
+        User searchUserDAO = new User("newUser", "Test User", "TestUser", "test@test.com");
 
         // when
         userService.searchUserByUserId(searchUserDAO.getUserId());
@@ -80,10 +79,10 @@ public class UserServiceImplTest {
     public void givenNonExistingUser_whenCreateUser_thenCreateUser() throws UserAlreadyExistsException
     {
         // given
-        UserDAO userDAO2 = new UserDAO("CreateUser", "Create User", "TestUser", "test@test.com");
+        User userDAO2 = new User("CreateUser", "Create User", "TestUser", "test@test.com");
 
         // when
-        UserDAO createdUserDAO = userService.createUser(userDAO2);
+        User createdUserDAO = userService.createUser(userDAO2);
 
         // then
         Assert.assertEquals(createdUserDAO, userDAO2);
@@ -93,7 +92,7 @@ public class UserServiceImplTest {
     public void givenExistingUser_whenCreateUser_thenThrowException() throws UserAlreadyExistsException
     {
         //given
-        UserDAO searchUserDAO = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
+        User searchUserDAO = new User("TestUser", "Test User", "TestUser", "test@test.com");
 
         // when
         userService.createUser(searchUserDAO);
@@ -103,10 +102,10 @@ public class UserServiceImplTest {
     public void givenExistingUser_whenUpdateUser_thenUpdateUser() throws UserNotFoundException
     {
         //given
-        UserDAO searchUserDAO = new UserDAO("TestUser", "Update User", "TestUser", "test@test.com");
+        User searchUserDAO = new User("TestUser", "Update User", "TestUser", "test@test.com");
 
         // when
-        UserDAO updatedUserDAO = userService.updateUser(searchUserDAO);
+        User updatedUserDAO = userService.updateUser(searchUserDAO);
 
         // then
         Assert.assertEquals(updatedUserDAO, searchUserDAO);
@@ -116,7 +115,7 @@ public class UserServiceImplTest {
     public void givenNonExistingUser_whenUpdateUser_thenThrowException() throws UserNotFoundException
     {
         //given
-        UserDAO searchUserDAO = new UserDAO("newUser", "Test User", "TestUser", "test@test.com");
+        User searchUserDAO = new User("newUser", "Test User", "TestUser", "test@test.com");
 
         // when
         userService.updateUser(searchUserDAO);
@@ -127,7 +126,7 @@ public class UserServiceImplTest {
     public void givenExistingUserId_whenDeleteUser_thenDeleteUser() throws UserNotFoundException
     {
         //given
-        UserDAO searchUserDAO = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
+        User searchUserDAO = new User("TestUser", "Test User", "TestUser", "test@test.com");
 
         // when
         userService.deleteUserByUserId(searchUserDAO.getUserId());
@@ -138,7 +137,7 @@ public class UserServiceImplTest {
     public void givenNonExistingUserId_whenDeleteUser_thenThrowException() throws UserNotFoundException
     {
         //given
-        UserDAO searchUserDAO = new UserDAO("newUser", "Test User", "TestUser", "test@test.com");
+        User searchUserDAO = new User("newUser", "Test User", "TestUser", "test@test.com");
 
         // when
         userService.deleteUserByUserId(searchUserDAO.getUserId());

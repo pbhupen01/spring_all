@@ -1,19 +1,19 @@
-package com.practice.spring.dao;
+package com.practice.spring.model;
 
 
 import org.junit.Assert;
 import org.junit.Test;
 
-public class UserDAOTest {
+public class UserTest {
 
     @Test
     public void givenObjectsWithSameFields_whenTestedEquals_thenAssertEquals()
     {
         // given
-        UserDAO first = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
+        User first = new User("TestUser", "Test User", "TestUser", "test@test.com");
 
         // when
-        UserDAO second = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
+        User second = new User("TestUser", "Test User", "TestUser", "test@test.com");
 
         // then
         Assert.assertEquals(first, second);
@@ -23,10 +23,10 @@ public class UserDAOTest {
     public void givenObjectsWithDiffFields_whenTestedEquals_thenAssertNotEquals()
     {
         // given
-        UserDAO first = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
+        User first = new User("TestUser", "Test User", "TestUser", "test@test.com");
 
         // when
-        UserDAO second = new UserDAO("TestUser1", "Test User", "TestUser", "test@test.com");
+        User second = new User("TestUser1", "Test User", "TestUser", "test@test.com");
 
         // then
         Assert.assertNotEquals(first, second);

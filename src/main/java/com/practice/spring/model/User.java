@@ -1,4 +1,4 @@
-package com.practice.spring.dao;
+package com.practice.spring.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class UserDAO {
+public class User {
 
     @Id
     private String userId;
@@ -37,7 +37,7 @@ public class UserDAO {
         {
             return false;
         }
-        UserDAO userDAO = (UserDAO) object;
+        User userDAO = (User) object;
         return compareFields(this.getUserId(), userDAO.getUserId())
                 && compareFields(this.getDisplayName(), userDAO.getDisplayName())
                 && compareFields(this.getPassword(), userDAO.getPassword())

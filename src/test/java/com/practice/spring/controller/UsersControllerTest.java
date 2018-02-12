@@ -1,6 +1,6 @@
 package com.practice.spring.controller;
 
-import com.practice.spring.dao.UserDAO;
+import com.practice.spring.model.User;
 import com.practice.spring.exception.UserNotFoundException;
 import com.practice.spring.service.UserService;
 import org.junit.FixMethodOrder;
@@ -41,7 +41,7 @@ public class UsersControllerTest {
     @Test
     public void givenExistingUserId_whenGetUser_thenReturnUser() throws Exception
     {
-        UserDAO userDAO1 = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
+        User userDAO1 = new User("TestUser", "Test User", "TestUser", "test@test.com");
 
         // given
         Mockito.when(userService.searchUserByUserId(userDAO1.getUserId())).thenReturn(userDAO1);
@@ -71,7 +71,7 @@ public class UsersControllerTest {
     @Test
     public void givenNonExistingUser_whenCreateUser_thenCreateUser() throws Exception
     {
-        UserDAO userDAO1 = new UserDAO("TestUser", "Test User", "TestUser", "test@test.com");
+        User userDAO1 = new User("TestUser", "Test User", "TestUser", "test@test.com");
 
         // given
         Mockito.when(userService.createUser(userDAO1)).thenReturn(userDAO1);

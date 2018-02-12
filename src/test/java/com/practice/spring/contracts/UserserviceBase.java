@@ -1,6 +1,6 @@
 package com.practice.spring.contracts;
 
-import com.practice.Application;
+import com.practice.PracticeApplication;
 import com.practice.spring.controller.UserController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  *
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = PracticeApplication.class)
 @ActiveProfiles(profiles = "test")
 @Ignore
 public class UserserviceBase {
